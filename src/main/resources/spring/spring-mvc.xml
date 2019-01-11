@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 配置包扫描器 -->
+    <context:component-scan base-package="linkjb.controller"/>
+    <!-- 具体controller包的路径取决于你新建的java代码的controller层包  -->
+    <!--&lt;!&ndash; 配置注解驱动&ndash;&gt;<mvc:annotation-driven/>-->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--静态资源访问--><mvc:default-servlet-handler/>
+    <!--视图解析器-->
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+    <!--<propertyname="prefix" value="/">-->
+        <!--<propertyname = "suffix" value = ".html" />-->
+    <!--<propertyname="viewClass"value="org.springframework.web.servlet.view.JstlView"/>-->
+    <!--</bean>-->
+    <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"></mvc:mapping>
+            <bean class="linkjb.base.ProcessInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+
+    <mvc:resources location="/images" mapping="/**"/>
+
+    <!-- 对文件上传的处理，这里声明的id必须为multipartResolver-->
+    <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+        <!--  最大为100M，单位为字节   -->
+        <property name="maxUploadSize" value="104857600"></property>
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxInMemorySize" value="40960"></property>
+    </bean>
+
+    <!--拦截器--> <!-- <mvc:interceptors>
+         &lt;!&ndash;可配置多个拦截器,顺序执行 &ndash;&gt;
+          <mvc:interceptor> <mvc:mapping path="/product/**"/>
+          &lt;!&ndash;如果不配置或/*,将拦截所有的Controller &ndash;&gt;
+          <bean class="manage.base.interceptor.PermissionInterceptor"></bean> </mvc:interceptor> </mvc:interceptors>-->
+        </beans>

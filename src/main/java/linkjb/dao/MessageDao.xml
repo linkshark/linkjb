@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="linkjb.dao.MessageDao">
+    <!-- 数据库跟model属性的映射map，如果你定义的model的属性跟数据库的字段名称不完全一样，
+      并且想让mybatis自动将查询结果封装到model中，这个是必须的，
+        当然如果你的model中的属性名称跟数据库字段完全一样，那么这里就不需要了。 -->
+
+
+<insert id="save" parameterType="linkjb.pojo.Message">
+    insert into message(ownerId,passerId,message,createTime) values(#{ownerId},#{passerId},#{message},#{createTime})
+</insert>
+    <select id="findmessageByFlag" resultType="java.util.Map">
+        <if test="flag==1">
+            SELECT a.*,b.name ownerName,(select c.name from users c where c.id=a.passerId) passerName FROM message a left join users b on a.ownerId=b.id where a.ownerId= #{ownerId};
+        </if>
+        <if test="flag==2">
+            SELECT a.*,b.name ownerName,(select c.name from users c where c.id=a.passerId) passerName FROM message a left join users b on a.ownerId=b.id where a.passerId= #{ownerId};
+
+        </if>
+
+    </select>
+
+</mapper>

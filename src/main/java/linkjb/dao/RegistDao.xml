@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="linkjb.dao.RegistDao">
+    <resultMap id="BaseResultMap" type="linkjb.pojo.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="VARCHAR" property="age"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="pass" jdbcType="VARCHAR" property="pass"/>
+        <!--<result column="checkPass" jdbcType="VARCHAR" property="checkPass"/>-->
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="findGender" jdbcType="VARCHAR" property="findGender"/>
+        <result column="birthday" javaType="java.util.Date" jdbcType="DATE" property="birthday"/>
+        <result column="findFlag" javaType="INTEGER"  property="findFlag"/>
+        <result column="bodyShape" javaType="INTEGER"  property="bodyShape"/>
+        <result column="job" javaType="INTEGER"  property="job"/>
+        <result column="tall" javaType="INTEGER"  property="tall"/>
+        <result column="marriageFlag" javaType="INTEGER"  property="marriageFlag"/>
+        <result column="education" javaType="INTEGER"  property="education"/>
+
+        <!--<result column="CHANESE_ID" jdbcType="VARCHAR" property="chaneseId"/>-->
+        <!--<result column="DEPT_ID" jdbcType="VARCHAR" property="deptId"/>-->
+        <!--<result column="JOB_ID" jdbcType="VARCHAR" property="jobId"/>-->
+        <!--<result column="USER_LEVEL" jdbcType="VARCHAR" property="userLevel"/>-->
+        <!--<result column="STATUS" jdbcType="VARCHAR" property="status"/>-->
+        <!--<result column="IMG" jdbcType="VARCHAR" property="img"/>-->
+        <!--<result column="CREATOR" jdbcType="VARCHAR" property="creator"/>-->
+        <!--<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>-->
+        <!--<result column="MENDER" jdbcType="VARCHAR" property="mender"/>-->
+        <!--<result column="MEND_TIME" jdbcType="VARCHAR" property="mendTime"/>-->
+        <!--<result column="REMARK" jdbcType="VARCHAR" property="remark"/>-->
+        <!--<result column="SEX_NAME" jdbcType="VARCHAR" property="sexName"/>-->
+        <!--<result column="DEPT_NAME" jdbcType="VARCHAR" property="deptName"/>-->
+        <!--<result column="JOB_NAME" jdbcType="VARCHAR" property="jobName"/>-->
+    </resultMap>
+    <!-- 新增用户 insert标签，由于传入参数为一个model，所以sql中的参数必须跟model中的属性一样。 -->
+    <insert id="Regist"  parameterType="linkjb.pojo.User">
+        Insert into users(name,age,email,passWord,mobile,gender,findGender,birthday,imageUrl,findFlag,bodyShape,job,tall,marriageFlag,education,createTime)
+        values
+        (#{name},#{age},#{email},#{passWord},#{mobile},#{gender},#{findGender},#{birthday},#{imageUrl},#{findFlag},#{bodyShape},#{job},#{tall},#{marriageFlag},#{education},#{createTime})
+    </insert>
+
+    <select id="checkName" parameterType="java.lang.String" resultType="int">
+        select count(*) from users where name = #{name}
+    </select>
+
+    <select id="checkEmail" parameterType="java.lang.String" resultType="int">
+        select count(*) from users where email = #{email}
+    </select>
+
+    <select id="checkMobile" parameterType="java.lang.String" resultType="int">
+        select count(*) from users where mobile = #{mobile}
+    </select>
+
+
+
+
+    <sql id="Base_Column_List">
+    USER.USER_ID USER_ID,
+   USER_NAME,
+   /*PASSWORD, 不查密码*/
+   EN_NAME,
+   SEX,
+   BIRTHDAY,
+   EMAIL,
+   PHONE,
+   USER.ADDR ADDR,
+   HOME_TOWN,
+   CHANESE_ID,
+   USER.DEPT_ID DEPT_ID,
+   USER.JOB_ID JOB_ID,
+   USER_LEVEL,
+   USER.STATUS STATUS,
+   IMG,
+   USER.CREATOR,
+   USER.CREATE_TIME,
+   USER.MENDER,
+   USER.MEND_TIME,
+   USER.REMARK
+  </sql>
+
+    <sql id="order_Column_List">
+   CD.VALUE_NAME AS SEX_NAME, DEPT.DEPT_NAME AS DEPT_NAME, JOB.JOB_NAME AS JOB_NAME
+  </sql>
+
+
+    <select id="getUser" parameterType="int"
+             resultType="linkjb.pojo.User">
+             select * from users where id=#{id}
+    </select>
+
+    <!-- 登录 -->
+    <select id="login" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_mgt_user USER
+        where (USER_NAME = #{userName,jdbcType=VARCHAR} || EN_NAME = #{userName,jdbcType=VARCHAR} )
+        AND PASSWORD = #{pw,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据主键查询用户信息 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,
+        <include refid="order_Column_List"/>
+        FROM t_mgt_user USER
+        LEFT JOIN t_mgt_department DEPT ON DEPT.DEPT_ID = USER.DEPT_ID
+        LEFT JOIN t_mgt_job JOB ON JOB.JOB_ID = USER.JOB_ID
+        LEFT JOIN codedata CD ON CD.CODE_VALUE = USER.SEX
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+     delete from t_mgt_user
+     where USER_ID = #{userId,jdbcType=VARCHAR}
+   </delete>
+
+</mapper>

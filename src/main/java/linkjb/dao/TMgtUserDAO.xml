@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="linkjb.dao.TMgtUserDAO">
+    <!-- 数据库跟model属性的映射map，如果你定义的model的属性跟数据库的字段名称不完全一样，
+      并且想让mybatis自动将查询结果封装到model中，这个是必须的，
+        当然如果你的model中的属性名称跟数据库字段完全一样，那么这里就不需要了。 -->
+    <resultMap id="BaseResultMap" type="linkjb.pojo.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="age" jdbcType="VARCHAR" property="age"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="pass" jdbcType="VARCHAR" property="pass"/>
+        <!--<result column="checkPass" jdbcType="VARCHAR" property="checkPass"/>-->
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="gender" jdbcType="VARCHAR" property="gender"/>
+        <result column="findGender" jdbcType="VARCHAR" property="findGender"/>
+        <result column="birthday" javaType="java.util.Date" jdbcType="DATE" property="birthday"/>
+        <result column="findFlag" javaType="INTEGER"  property="findFlag"/>
+        <result column="bodyShape" javaType="INTEGER"  property="bodyShape"/>
+        <result column="job" javaType="INTEGER"  property="job"/>
+        <result column="tall" javaType="INTEGER"  property="tall"/>
+        <result column="marriageFlag" javaType="INTEGER"  property="marriageFlag"/>
+        <result column="education" javaType="INTEGER"  property="education"/>
+
+        <!--<result column="CHANESE_ID" jdbcType="VARCHAR" property="chaneseId"/>-->
+        <!--<result column="DEPT_ID" jdbcType="VARCHAR" property="deptId"/>-->
+        <!--<result column="JOB_ID" jdbcType="VARCHAR" property="jobId"/>-->
+        <!--<result column="USER_LEVEL" jdbcType="VARCHAR" property="userLevel"/>-->
+        <!--<result column="STATUS" jdbcType="VARCHAR" property="status"/>-->
+        <!--<result column="IMG" jdbcType="VARCHAR" property="img"/>-->
+        <!--<result column="CREATOR" jdbcType="VARCHAR" property="creator"/>-->
+        <!--<result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime"/>-->
+        <!--<result column="MENDER" jdbcType="VARCHAR" property="mender"/>-->
+        <!--<result column="MEND_TIME" jdbcType="VARCHAR" property="mendTime"/>-->
+        <!--<result column="REMARK" jdbcType="VARCHAR" property="remark"/>-->
+        <!--<result column="SEX_NAME" jdbcType="VARCHAR" property="sexName"/>-->
+        <!--<result column="DEPT_NAME" jdbcType="VARCHAR" property="deptName"/>-->
+        <!--<result column="JOB_NAME" jdbcType="VARCHAR" property="jobName"/>-->
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    USER.USER_ID USER_ID,
+   USER_NAME,
+   /*PASSWORD, 不查密码*/
+   EN_NAME,
+   SEX,
+   BIRTHDAY,
+   EMAIL,
+   PHONE,
+   USER.ADDR ADDR,
+   HOME_TOWN,
+   CHANESE_ID,
+   USER.DEPT_ID DEPT_ID,
+   USER.JOB_ID JOB_ID,
+   USER_LEVEL,
+   USER.STATUS STATUS,
+   IMG,
+   USER.CREATOR,
+   USER.CREATE_TIME,
+   USER.MENDER,
+   USER.MEND_TIME,
+   USER.REMARK
+  </sql>
+
+    <sql id="order_Column_List">
+   CD.VALUE_NAME AS SEX_NAME, DEPT.DEPT_NAME AS DEPT_NAME, JOB.JOB_NAME AS JOB_NAME
+  </sql>
+
+
+
+
+    <!--foreach 元素的功能非常强大，它允许你指定一个集合，声明可以在元素体内使用的集合项（item）和索引（index）变量。-->
+    <!--它也允许你指定开头与结尾的字符串以及在迭代结果之间放置分隔符。这个元素是很智能的，因此它不会偶然地附加多余的分隔符。-->
+    <!--注意 你可以将任何可迭代对象（如 List、Set 等）、Map 对象或者数组对象传递给 foreach 作为集合参数。-->
+    <!--当使用可迭代对象或者数组时，index 是当前迭代的次数，item 的值是本次迭代获取的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值-->
+    <!--&lt;!&ndash;<select id="selectPostIn" resultType="domain.blog.Post">&ndash;&gt;-->
+        <!--SELECT *-->
+        <!--FROM POST P-->
+        <!--WHERE ID in-->
+        <!--<foreach item="item" index="index" collection="list"-->
+                 <!--open="(" separator="," close=")">-->
+            <!--#{item}-->
+        <!--</foreach>-->
+    <!--</select>-->
+
+    <!-- 查询标签，用于放置查询语句，id属性在本映射文件中必须唯一，并且作为该条查询语句的唯一标识，也叫statementid
+            parameterType 输入参数类型，可以为基本类型，包装类型
+               resultType 返回的结果对象集，可以为基本类型，包装类型
+                   resultMap  上面的<resultMap 的id
+                       ****  注意下面的sql的参数的写法，在参数只有一个，
+                       并且是基本类型的情况写 #{id} 可以随意写，写成#{kadksdjf}也没问题-->
+
+    <select id="getUser" parameterType="java.lang.String"
+             resultType="linkjb.pojo.User">
+             select * from users where id=#{id}
+    </select>
+    <!-- 如果你的model中的属性跟数据库表字段对不上，就无法完全将数据库中的数据映射到你的model-->
+    <select id="findUserById" parameterType="int" resultType="linkjb.pojo.User">
+        select * from users where id=#{id}
+
+    </select>
+    <!--点赞数+1-->
+    <update id="addHeart" parameterType="int">
+        update users set heartLove = heartLove+1 where id = #{likeId}
+    </update>
+    <!--插入点赞维护表-->
+    <insert id="insetIntoLikes" >
+        insert into likes(ownerId,likeId,modifyTime) values (#{ownerId},#{likeId},#{newDate})
+    </insert>
+    <!--查询点赞维护表-->
+    <select id="findLikesByOwnerId" parameterType="int" resultType="int">
+        select likeId from likes where ownerId = #{ownerId}
+    </select>
+
+    <!-- 查询Likes表,不重复添加喜爱-->
+    <select id="findCountAndTimeById" parameterType="int" resultType="java.util.Map">
+        select count(*) as count,modifyTime from likes where ownerId = #{ownerId} and likeId = #{likeId}
+    </select>
+    <!--  更新Likes表的时间-->
+    <update id="updateLikeTime">
+        update likes set modifyTime = #{newDate} where ownerId = #{ownerId} and likeId = #{likeId}
+    </update>
+    <!-- 插入黑名单并去重,返回影响行数-->
+    <insert id="addBlack" parameterType="linkjb.pojo.BlackUser">
+        INSERT  into blackUsers(userId,reportId,createTime,reportResult) select userId,reportId,createTime,reportResult from blackUsers
+        where not exists(select 1 from blackUsers where userId=284 and reportId=288);
+        <selectKey resultType="int" order="AFTER">
+            select ROW_COUNT();
+        </selectKey>
+    </insert>
+
+
+
+
+    <!--模糊查询-->
+    <!--select * from t_user where username like concat('%', #{username} ,'%')-->
+
+    <!--新增信息，并拿到新增信息的表主键信息。
+    新增数据，得到主键的外层写法没什么特别，跟普通的insert一样。只不过里面加了selectKey-->
+    <!--<insert id="insertAndgetkey" parameterType="com.soft.mybatis.model.User">-->
+        <!--&lt;!&ndash;selectKey  会将 SELECT LAST_INSERT_ID()的结果放入到传入的model的主键里面，-->
+            <!--keyProperty 对应的model中的主键的属性名，这里是 user 中的id，因为它跟数据库的主键对应-->
+            <!--order AFTER 表示 SELECT LAST_INSERT_ID() 在insert执行之后执行,多用与自增主键，-->
+                  <!--BEFORE 表示 SELECT LAST_INSERT_ID() 在insert执行之前执行，这样的话就拿不到主键了，-->
+                        <!--这种适合那种主键不是自增的类型-->
+            <!--resultType 主键类型 &ndash;&gt;-->
+        <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">-->
+            <!--SELECT LAST_INSERT_ID()-->
+        <!--</selectKey>-->
+        <!--insert into t_user (username,password,create_date) values(#{username},#{password},#{createDate})-->
+    <!--</insert>-->
+
+
+
+
+
+
+
+    <select id="findUserByFlagAndAddress" resultType="linkjb.pojo.User">
+            select * from users
+        <if test="findFlag!=0">
+            where
+            findFlag = #{findFlag}
+        </if>
+        and id not in(#{userId}) and
+        address like CONCAT('%',#{IPAddress},'%')
+    </select>
+    <select id="findAllUser" resultType="linkjb.pojo.User">
+        select * from users
+    </select>
+    <select id="getUserByUserId" parameterType="java.lang.String" resultType="linkjb.pojo.User">
+        select * from users where id = ${userId}
+    </select>
+
+    <select id="findUserByFlag"  resultType="linkjb.pojo.User">
+        select * from users
+        <if test="findFlag!=0">
+        where
+        findFlag = #{findFlag}
+        </if>
+        and Id not in(#{userId})
+
+    </select>
+
+    <!-- 更新用户，由于传入参数为一个model，所以sql中的参数必须跟model中的属性一样。 -->
+    <update id="updateUser" parameterType="linkjb.pojo.User" >
+        update users set name = #{name},age = #{age},email = #{email},mobile=#{mobile},gender=#{gender},findGender=#{findGender},birthday=#{birthday},
+        imageUrl=#{imageUrl},findFlag=#{findFlag},bodyShape=#{bodyShape},job=#{job},tall=#{tall},marriageFlag=#{marriageFlag},education=#{education},
+        weight=#{weight},money=#{money},drink=#{drink},smoke=#{smoke},child=#{child},sport=#{sport},detail=#{detail},modifyTime=#{modifyTime},address=#{address}
+        where id = #{id}
+    </update>
+
+    <!-- 登录 -->
+    <select id="login" parameterType="java.util.Map" resultType="linkjb.pojo.User">
+        select * from users where (name = #{userName} || mobile = #{userName}) and passWord = #{pw}
+    </select>
+    <!--<select id="loginByMobile" parameterType="java.util.Map" resultType="linkjb.pojo.User">-->
+        <!--select-->
+        <!--*-->
+        <!--from users-->
+        <!--where mobile = #{userName}-->
+        <!--and password = #{pw}-->
+    <!--</select>-->
+
+    <!-- 根据主键查询用户信息 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,
+        <include refid="order_Column_List"/>
+        FROM t_mgt_user USER
+        LEFT JOIN t_mgt_department DEPT ON DEPT.DEPT_ID = USER.DEPT_ID
+        LEFT JOIN t_mgt_job JOB ON JOB.JOB_ID = USER.JOB_ID
+        LEFT JOIN codedata CD ON CD.CODE_VALUE = USER.SEX
+        where USER_ID = #{userId,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据主键删除用户 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+     delete from t_mgt_user
+     where USER_ID = #{userId,jdbcType=VARCHAR}
+   </delete>
+
+</mapper>
