@@ -298,7 +298,7 @@
           this.url = "http://www.linkjb.com/linkjb/images/"+res.entity;
           console.log(this.url);
         }else{
-          _this.$message({
+          this.$message({
             showClose: true,
             message: '上传错误,请联系管理员',
             type: 'error',
@@ -311,14 +311,14 @@
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isJPG) {
-          _this.$message({
+          this.$message({
             showClose: true,
             message: '上传头像图片只能是 JPG 格式!',
             type: 'error',
             duration:2000
           });
           if (!isLt2M) {
-            _this.$message({
+            this.$message({
               showClose: true,
               message: '上传头像图片大小不能超过 2MB!',
               type: 'error',
