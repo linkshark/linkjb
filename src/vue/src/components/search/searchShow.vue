@@ -89,16 +89,16 @@
       </el-form>
       <el-aside width="30%">
         <div class="box">
-          <div class="carousel-messagebox">
-            <transition-group tag="ul" enter-active-class="animated fadeInUp"
-                              leave-active-class="animated fadeOutUp">
-              <li v-show="idx == isCurrent" v-for="(item, idx) in messageList" :key="idx" :class="['carousel-message']">
-                <span class="good">{{item.name}}</span>
-                <span>牵手</span>
-                <span class="good">{{item.prizeName}}</span>
-              </li>
-            </transition-group>
-          </div>
+          <!--<div class="carousel-messagebox">-->
+            <!--<transition-group tag="ul" enter-active-class="animated fadeInUp"-->
+                              <!--leave-active-class="animated fadeOutUp">-->
+              <!--<li v-show="idx == isCurrent" v-for="(item, idx) in messageList" :key="idx" :class="['carousel-message']">-->
+                <!--<span class="good">{{item.name}}</span>-->
+                <!--<span>牵手</span>-->
+                <!--<span class="good">{{item.prizeName}}</span>-->
+              <!--</li>-->
+            <!--</transition-group>-->
+          <!--</div>-->
         </div>
         <div >
           <el-card class="box-card">
